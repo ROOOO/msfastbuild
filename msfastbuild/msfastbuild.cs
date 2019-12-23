@@ -92,20 +92,20 @@ namespace msfastbuild
 			public string AdditionalLinkInputs = "";
 		}
 
-		static void Main(string[] args)
+		static int Main(string[] args)
 		{			
 			Parser parser = new Parser();
 			if (!parser.ParseArguments(args, CommandLineOptions))
 			{
 				Console.WriteLine(CommandLineOptions.GetUsage());
-				return;
+				return 2;
 			}
 
 			if (string.IsNullOrEmpty(CommandLineOptions.Solution) && string.IsNullOrEmpty(CommandLineOptions.Project))
 			{
 				Console.WriteLine("No vcxproj or sln provided: nothing to do!");
 				Console.WriteLine(CommandLineOptions.GetUsage());
-				return;
+				return 3;
 			}
 
 			List <string> ProjectsToBuild = new List<string>();
@@ -137,7 +137,7 @@ namespace msfastbuild
 				catch (Exception e)
 				{
 					Console.WriteLine("Failed to load input file: " + CommandLineOptions.Solution + ", exception thrown was: " + e.Message);
-					return;
+					return 4;
 				}
 			}
 			else if (!string.IsNullOrEmpty(CommandLineOptions.Project))
@@ -192,6 +192,7 @@ namespace msfastbuild
 			}
 
 			Console.WriteLine(ProjectsBuilt + "/" + EvaluatedProjects.Count + " built.");
+			return ProjectsBuilt == EvaluatedProjects.Count ? 0 : 1;
 		}
 
 		static public void EvaluateProjectReferences(string ProjectPath, List<MSFBProject> evaluatedProjects, MSFBProject dependent)
