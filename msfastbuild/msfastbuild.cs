@@ -506,12 +506,13 @@ namespace msfastbuild
 			List<ObjectListNode> ObjectLists = new List<ObjectListNode>();
 			var CompileItems = ActiveProject.GetItems("ClCompile");
 			string PrecompiledHeaderString = "";
+			string ExcludeFromBuildConditionString = String.Format("'$(Platform)'=='{0}'", Platform);
 
 			foreach (var Item in CompileItems)
 			{
 				if (Item.DirectMetadata.Any())
 				{
-					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.EvaluatedValue == "true").Any())
+					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.Xml.Condition == ExcludeFromBuildConditionString && dmd.EvaluatedValue == "true").Any())
 						continue;
 					if (Item.DirectMetadata.Where(dmd => dmd.Name == "PrecompiledHeader" && dmd.EvaluatedValue == "Create").Any())
 					{
@@ -531,7 +532,7 @@ namespace msfastbuild
 				bool ExcludePrecompiledHeader = false;
 				if (Item.DirectMetadata.Any())
 				{
-					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.EvaluatedValue == "true").Any())
+					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.Xml.Condition == ExcludeFromBuildConditionString && dmd.EvaluatedValue == "true").Any())
 						continue;
 					if (Item.DirectMetadata.Where(dmd => dmd.Name == "PrecompiledHeader" && dmd.EvaluatedValue == "Create").Any())
 						continue;
@@ -562,7 +563,7 @@ namespace msfastbuild
 			{
 				if (Item.DirectMetadata.Any())
 				{
-					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.EvaluatedValue == "true").Any())
+					if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.Xml.Condition == ExcludeFromBuildConditionString && dmd.EvaluatedValue == "true").Any())
 						continue;
 				}
 			
