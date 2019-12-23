@@ -623,6 +623,10 @@ namespace msfastbuild
 
 					foreach (var deps in CurrentProject.Dependents)
 					{
+						if (CurrentProject.Proj.GetProperty("ConfigurationType").EvaluatedValue == "Application" )
+						{
+							continue;
+						}
 						deps.AdditionalLinkInputs += " \"" + DependencyOutputPath + "\" ";
 					}
 				}
