@@ -166,6 +166,8 @@ namespace msfastbuildvsix
 			}
 
 			fbPackage.m_dte.ExecuteCommand("File.SaveAll");
+			Window window = fbPackage.m_dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
+			window.Activate();
 
 			string fbCommandLine = "";
 			string fbWorkingDirectory = "";
