@@ -685,8 +685,20 @@ namespace msfastbuild
 				OutputString.AppendFormat("\t.LibrarianOptions = '\"%1\" /OUT:\"%2\" {0}'\n", linkerOptions);
 				OutputString.AppendFormat("\t.LibrarianOutput = '{0}'\n", OutputFile);
 
+				var AdditionObjectItems = ActiveProject.GetItems("Object");
+				var AdditionObjectsString = "";
+				foreach (var Item in AdditionObjectItems)
+				{
+					if (Item.DirectMetadata.Any())
+					{
+						if (Item.DirectMetadata.Where(dmd => dmd.Name == "ExcludedFromBuild" && dmd.Xml.Condition == ExcludeFromBuildConditionString && dmd.EvaluatedValue == "true").Any())
+							continue;
+					}
+					AdditionObjectsString += String.Format(",'{0}'", Item.EvaluatedInclude);
+				}
+
 				OutputString.Append("\t.LibrarianAdditionalInputs = { ");
-				OutputString.Append(CompileActions);
+				OutputString.Append(CompileActions + AdditionObjectsString);
 				OutputString.Append(" }\n");
 
 				OutputString.Append("}\n\n");
